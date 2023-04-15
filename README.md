@@ -1,2 +1,2 @@
 # Support Tools
-common helps for common solutions
+common helps for common problems
