@@ -31,7 +31,7 @@ class ImmutableCollection implements Countable, IteratorAggregate
     /**
      * @param array<TKey, TValue> $items
      */
-    public function __construct(protected array $items)
+    public function __construct(protected iterable $items)
     {
     }
 
@@ -41,7 +41,7 @@ class ImmutableCollection implements Countable, IteratorAggregate
      * @param array<TKey, TValue> $items
      * @return self<TKey, TValue>
      */
-    public static function from(array $items): static
+    public static function from(iterable $items): static
     {
         return new static($items);
     }
@@ -182,7 +182,7 @@ class ImmutableCollection implements Countable, IteratorAggregate
      *
      * @return array<TKey, TValue>
      */
-    public function items(): array
+    public function items(): iterable
     {
         return $this->items;
     }

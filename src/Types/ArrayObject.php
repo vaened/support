@@ -21,7 +21,7 @@ abstract class ArrayObject extends ImmutableCollection
     /**
      * @param array<TKey, TValue> $items
      */
-    public function __construct(array $items)
+    public function __construct(iterable $items)
     {
         $this->ensureType($items);
         parent::__construct($items);
