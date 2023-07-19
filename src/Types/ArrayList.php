@@ -17,6 +17,14 @@ use function Lambdish\Phunctional\map;
  */
 class ArrayList extends ImmutableCollection
 {
+    public function merge(self $collection): static
+    {
+        return new static([
+            ...$this->values(),
+            ...$collection->values(),
+        ]);
+    }
+
     /**
      * Map a collection and flatten the result by a single level.
      *

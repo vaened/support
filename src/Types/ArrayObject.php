@@ -34,6 +34,17 @@ abstract class ArrayObject extends ImmutableCollection
      */
     abstract protected function type(): string;
 
+    public function merge(self $collection): static
+    {
+        $items = $collection->values();
+        $this->ensureType($items);
+
+        return new static([
+            ...$this->values(),
+            ...$items,
+        ]);
+    }
+
     /**
      * Run a map over each of the items.
      *
