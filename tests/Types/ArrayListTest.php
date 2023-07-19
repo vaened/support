@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace Vaened\Support\Tests\Types;
 
 use Vaened\Support\Types\ArrayList;
-use Vaened\Support\Types\ImmutableCollection;
 
 use function is_numeric;
 
@@ -109,9 +108,16 @@ final class ArrayListTest extends CollectionTestCase
         $this->assertEquals([1, 2, 3], $this->collection()->values());
     }
 
-    protected function collection(): ImmutableCollection
+    public function test_merge_two_collection_into_a_new_one(): void
     {
-        return ArrayList::from([
+        $newCollection = $this->collection()->merge(new ArrayList([4, 5, 6, 7]));
+
+        $this->assertEquals([1, 2, 3, 4, 5, 6, 7], $newCollection->values());
+    }
+
+    protected function collection(): ArrayList
+    {
+        return new ArrayList([
             'a' => 1,
             'b' => 2,
             'c' => 3

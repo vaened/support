@@ -7,9 +7,11 @@ declare(strict_types=1);
 
 namespace Vaened\Support\Tests\Types;
 
+use stdClass;
 use Vaened\Support\Tests\Types\Utils\People;
 use Vaened\Support\Tests\Types\Utils\Person;
-use Vaened\Support\Types\ImmutableCollection;
+use Vaened\Support\Types\ArrayObject;
+use Vaened\Support\Types\InvalidType;
 
 use function is_numeric;
 use function sprintf;
@@ -21,6 +23,16 @@ final class ArrayObjectTest extends CollectionTestCase
     private readonly Person $gyro;
 
     private readonly Person $jotaro;
+
+    public function test_adding_a_disallowed_type_throws_an_exception(): void
+    {
+        $template = 'The collection <%s> requires type <%s>, but <%s> was given';
+        $this->expectException(InvalidType::class);
+        $this->expectExceptionMessage(
+            sprintf($template, People::class, Person::class, stdClass::class)
+        );
+        new People([new stdClass()]);
+    }
 
     public function test_reverse_objects(): void
     {
@@ -130,6 +142,35 @@ final class ArrayObjectTest extends CollectionTestCase
         ], $this->collection()->values());
     }
 
+    public function test_merge_two_objects_collection_into_a_new_one(): void
+    {
+        $dio           = new Person('Dio');
+        $newCollection = $this->collection()->merge(new People([$dio]));
+
+        $this->assertEquals([
+            $this->jotaro,
+            $this->gyro,
+            $this->josuke,
+            $dio
+        ], $newCollection->values());
+    }
+
+    public function test_merging_collection_of_objects_of_different_types_throws_an_exception(): void
+    {
+        $this->expectException(InvalidType::class);
+        $this->collection()->merge(new class extends ArrayObject {
+            public function __construct()
+            {
+                parent::__construct([new stdClass()]);
+            }
+
+            protected function type(): string
+            {
+                return stdClass::class;
+            }
+        });
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -138,9 +179,9 @@ final class ArrayObjectTest extends CollectionTestCase
         $this->josuke = Person::create('Josuke');
     }
 
-    protected function collection(): ImmutableCollection
+    protected function collection(): People
     {
-        return People::from([
+        return new People([
             $this->jotaro,
             $this->gyro,
             $this->josuke,
