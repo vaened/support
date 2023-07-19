@@ -36,27 +36,6 @@ class ImmutableCollection implements Countable, IteratorAggregate
     }
 
     /**
-     * Create new instance.
-     *
-     * @param array<TKey, TValue> $items
-     * @return self<TKey, TValue>
-     */
-    public static function from(array $items): static
-    {
-        return new static($items);
-    }
-
-    /**
-     * Create new empty instance.
-     *
-     * @return self<TKey, TValue>
-     */
-    public static function empty(): static
-    {
-        return new static([]);
-    }
-
-    /**
      * Reverse items order.
      *
      * @return static<TKey, TValue>
