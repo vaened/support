@@ -11,7 +11,7 @@ use Vaened\Support\Types\ArrayList;
 
 use function is_numeric;
 
-final class ArrayListTest extends CollectionTestCase
+final class ArrayListTest extends ListTestCase
 {
     public function test_reverse(): void
     {

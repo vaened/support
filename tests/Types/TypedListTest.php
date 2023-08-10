@@ -8,15 +8,15 @@ declare(strict_types=1);
 namespace Vaened\Support\Tests\Types;
 
 use stdClass;
-use Vaened\Support\Tests\Types\Utils\People;
 use Vaened\Support\Tests\Types\Utils\Person;
-use Vaened\Support\Types\ArrayObject;
+use Vaened\Support\Tests\Types\Utils\StronglyTypedList;
 use Vaened\Support\Types\InvalidType;
+use Vaened\Support\Types\TypedList;
 
 use function is_numeric;
 use function sprintf;
 
-final class ArrayObjectTest extends CollectionTestCase
+final class TypedListTest extends ListTestCase
 {
     private readonly Person $josuke;
 
@@ -29,9 +29,9 @@ final class ArrayObjectTest extends CollectionTestCase
         $template = 'The collection <%s> requires type <%s>, but <%s> was given';
         $this->expectException(InvalidType::class);
         $this->expectExceptionMessage(
-            sprintf($template, People::class, Person::class, stdClass::class)
+            sprintf($template, StronglyTypedList::class, Person::class, stdClass::class)
         );
-        new People([new stdClass()]);
+        new StronglyTypedList([new stdClass()]);
     }
 
     public function test_reverse_objects(): void
@@ -145,7 +145,7 @@ final class ArrayObjectTest extends CollectionTestCase
     public function test_merge_two_objects_collection_into_a_new_one(): void
     {
         $dio           = new Person('Dio');
-        $newCollection = $this->collection()->merge(new People([$dio]));
+        $newCollection = $this->collection()->merge(new StronglyTypedList([$dio]));
 
         $this->assertEquals([
             $this->jotaro,
@@ -158,7 +158,7 @@ final class ArrayObjectTest extends CollectionTestCase
     public function test_merging_collection_of_objects_of_different_types_throws_an_exception(): void
     {
         $this->expectException(InvalidType::class);
-        $this->collection()->merge(new class extends ArrayObject {
+        $this->collection()->merge(new class extends TypedList {
             public function __construct()
             {
                 parent::__construct([new stdClass()]);
@@ -174,17 +174,19 @@ final class ArrayObjectTest extends CollectionTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        StronglyTypedList::setType(Person::class);
         $this->jotaro = Person::create('Jotaro');
         $this->gyro   = Person::create('Gyro');
         $this->josuke = Person::create('Josuke');
     }
 
-    protected function collection(): People
+    protected function collection(): StronglyTypedList
     {
-        return new People([
-            $this->jotaro,
-            $this->gyro,
-            $this->josuke,
-        ]);
+        return new StronglyTypedList([
+                $this->jotaro,
+                $this->gyro,
+                $this->josuke,
+            ]
+        );
     }
 }

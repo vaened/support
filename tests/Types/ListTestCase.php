@@ -8,11 +8,11 @@ declare(strict_types=1);
 namespace Vaened\Support\Tests\Types;
 
 use Vaened\Support\Tests\TestCase;
-use Vaened\Support\Types\ImmutableCollection;
+use Vaened\Support\Types\AbstractList;
 
-abstract class CollectionTestCase extends TestCase
+abstract class ListTestCase extends TestCase
 {
-    abstract protected function collection(): ImmutableCollection;
+    abstract protected function collection(): AbstractList;
 
     public function test_count_collection(): void
     {

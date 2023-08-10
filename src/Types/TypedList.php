@@ -9,7 +9,7 @@ namespace Vaened\Support\Types;
 
 use function Lambdish\Phunctional\any;
 
-abstract class ArrayObject extends ImmutableCollection
+abstract class TypedList extends AbstractList
 {
     public function __construct(array $items)
     {

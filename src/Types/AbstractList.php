@@ -25,7 +25,7 @@ use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
 use function Lambdish\Phunctional\some;
 
-class ImmutableCollection implements Countable, IteratorAggregate
+class AbstractList implements Countable, IteratorAggregate
 {
     protected array $items;
 

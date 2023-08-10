@@ -9,7 +9,7 @@ namespace Vaened\Support\Types;
 
 use function array_unshift;
 
-class ArrayList extends ImmutableCollection
+class ArrayList extends AbstractList
 {
     public function merge(self $collection): static
     {
