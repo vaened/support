@@ -45,22 +45,15 @@ final class TypedListTest extends ListTestCase
         ], $items);
     }
 
-    public function test_only_object(): void
-    {
-        $items = $this->collection()->keys([2])->items();
-
-        $this->assertEquals([2 => $this->josuke], $items);
-    }
-
     public function test_find_object_by_value(): void
     {
-        $item = $this->collection()->contains(static fn(Person $person) => $person->name === 'Gyro');
+        $item = $this->collection()->pick(static fn(Person $person) => $person->name === 'Gyro');
         $this->assertEquals($this->gyro, $item);
     }
 
     public function test_find_object_by_key(): void
     {
-        $item = $this->collection()->contains(static fn(Person $person, int $key) => $key === 0);
+        $item = $this->collection()->pick(static fn(Person $person, int $key) => $key === 0);
         $this->assertEquals($this->jotaro, $item);
     }
 

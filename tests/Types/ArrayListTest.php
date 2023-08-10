@@ -9,7 +9,6 @@ namespace Vaened\Support\Tests\Types;
 
 use Vaened\Support\Types\ArrayList;
 
-use function dd;
 use function is_numeric;
 
 final class ArrayListTest extends ListTestCase
@@ -21,22 +20,15 @@ final class ArrayListTest extends ListTestCase
         $this->assertEquals(['c' => 3, 'b' => 2, 'a' => 1], $items);
     }
 
-    public function test_only(): void
-    {
-        $items = $this->collection()->keys(['a', 'c'])->items();
-
-        $this->assertEquals(['a' => 1, 'c' => 3], $items);
-    }
-
     public function test_find_by_value(): void
     {
-        $item = $this->collection()->contains(static fn(int $value, string $key) => $value === 1);
+        $item = $this->collection()->pick(static fn(int $value, string $key) => $value === 1);
         $this->assertEquals(1, $item);
     }
 
     public function test_find_by_key(): void
     {
-        $item = $this->collection()->contains(static fn(int $value, string $key) => $key === 'c');
+        $item = $this->collection()->pick(static fn(int $value, string $key) => $key === 'c');
         $this->assertEquals(3, $item);
     }
 
@@ -124,9 +116,9 @@ final class ArrayListTest extends ListTestCase
             'a' => 1,
             'b' => 2,
             'c' => 6,
-            0 => 4,
-            1 => 5,
-            2 => 7
+            0   => 4,
+            1   => 5,
+            2   => 7
 
         ], $newCollection->items());
     }

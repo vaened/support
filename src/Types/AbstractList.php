@@ -12,8 +12,6 @@ use Countable;
 use IteratorAggregate;
 use Traversable;
 
-use function array_flip;
-use function array_intersect_key;
 use function array_reverse;
 use function array_values;
 use function count;
@@ -73,15 +71,10 @@ class AbstractList implements Countable, IteratorAggregate
         return map($callback, $this->items());
     }
 
-    public function keys(array $keys): static
-    {
-        return new static(array_intersect_key($this->items(), array_flip($keys)));
-    }
-
-    public function contains(callable $callback): mixed
+    public function pick(callable $predicate): mixed
     {
         foreach ($this->items() as $key => $value) {
-            if ($callback($value, $key)) {
+            if ($predicate($value, $key)) {
                 return $value;
             }
         }
