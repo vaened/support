@@ -39,6 +39,25 @@ class AbstractList implements Countable, IteratorAggregate
         };
     }
 
+    public function merge(self $list): static
+    {
+        return new static([
+            ...$this->values(),
+            ...$list->values(),
+        ]);
+    }
+
+    public function overlay(AbstractList $list): static
+    {
+        $items = $this->items();
+
+        $list->each(function (mixed $item, int|string $key) use (&$items) {
+            $items[$key] = $item;
+        });
+
+        return new static($items);
+    }
+
     public function reverse(): static
     {
         return new static(array_reverse($this->items, true));
@@ -54,12 +73,12 @@ class AbstractList implements Countable, IteratorAggregate
         return map($callback, $this->items());
     }
 
-    public function only(array $keys): static
+    public function keys(array $keys): static
     {
         return new static(array_intersect_key($this->items(), array_flip($keys)));
     }
 
-    public function find(callable $callback): mixed
+    public function contains(callable $callback): mixed
     {
         foreach ($this->items() as $key => $value) {
             if ($callback($value, $key)) {
@@ -89,17 +108,6 @@ class AbstractList implements Countable, IteratorAggregate
     public function some(callable $callback): bool
     {
         return some($callback, $this->items());
-    }
-
-    public function every(callable $callback): bool
-    {
-        foreach ($this->items() as $key => $item) {
-            if (!$callback($item, $key)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     public function keyOf(callable $criteria): int|string|null

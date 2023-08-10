@@ -23,15 +23,16 @@ abstract class TypedList extends AbstractList
 
     abstract protected function type(): string;
 
-    public function merge(self $collection): static
+    public function merge(AbstractList $list): static
     {
-        $items = $collection->values();
-        $this->ensureType($items);
+        $this->ensureType($list->items());
+        return parent::merge($list);
+    }
 
-        return new static([
-            ...$this->values(),
-            ...$items,
-        ]);
+    public function overlay(AbstractList $list): static
+    {
+        $this->ensureType($list->items());
+        return parent::overlay($list);
     }
 
     protected function ensureType(array $items): void
@@ -41,8 +42,7 @@ abstract class TypedList extends AbstractList
         any(
             in_array($type, $this->natives())
                 ? self::ensureThat(static fn(mixed $item) => gettype($item) === $type)
-                : self::ensureThat(static fn(mixed $item) => $item instanceof $type)
-            ,
+                : self::ensureThat(static fn(mixed $item) => $item instanceof $type),
             $items
         );
     }

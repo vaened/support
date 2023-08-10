@@ -11,14 +11,6 @@ use function array_unshift;
 
 class ArrayList extends AbstractList
 {
-    public function merge(self $collection): static
-    {
-        return new static([
-            ...$this->values(),
-            ...$collection->values(),
-        ]);
-    }
-
     public function flatMap(callable $callback): self
     {
         return new static(parent::flatMap($callback));
