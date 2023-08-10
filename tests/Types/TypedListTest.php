@@ -47,20 +47,20 @@ final class TypedListTest extends ListTestCase
 
     public function test_only_object(): void
     {
-        $items = $this->collection()->only([2])->items();
+        $items = $this->collection()->keys([2])->items();
 
         $this->assertEquals([2 => $this->josuke], $items);
     }
 
     public function test_find_object_by_value(): void
     {
-        $item = $this->collection()->find(static fn(Person $person) => $person->name === 'Gyro');
+        $item = $this->collection()->contains(static fn(Person $person) => $person->name === 'Gyro');
         $this->assertEquals($this->gyro, $item);
     }
 
     public function test_find_object_by_key(): void
     {
-        $item = $this->collection()->find(static fn(Person $person, int $key) => $key === 0);
+        $item = $this->collection()->contains(static fn(Person $person, int $key) => $key === 0);
         $this->assertEquals($this->jotaro, $item);
     }
 
@@ -159,6 +159,34 @@ final class TypedListTest extends ListTestCase
     {
         $this->expectException(InvalidType::class);
         $this->collection()->merge(new class extends TypedList {
+            public function __construct()
+            {
+                parent::__construct([new stdClass()]);
+            }
+
+            protected function type(): string
+            {
+                return stdClass::class;
+            }
+        });
+    }
+
+    public function test_overlay_two_objects_collection_into_a_new_one(): void
+    {
+        $dio           = new Person('Dio');
+        $newCollection = $this->collection()->overlay(new StronglyTypedList([2 => $dio]));
+
+        $this->assertEquals([
+            $this->jotaro,
+            $this->gyro,
+            $dio
+        ], $newCollection->values());
+    }
+
+    public function test_overlay_collection_of_objects_of_different_types_throws_an_exception(): void
+    {
+        $this->expectException(InvalidType::class);
+        $this->collection()->overlay(new class extends TypedList {
             public function __construct()
             {
                 parent::__construct([new stdClass()]);

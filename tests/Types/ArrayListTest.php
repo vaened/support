@@ -9,6 +9,7 @@ namespace Vaened\Support\Tests\Types;
 
 use Vaened\Support\Types\ArrayList;
 
+use function dd;
 use function is_numeric;
 
 final class ArrayListTest extends ListTestCase
@@ -22,20 +23,20 @@ final class ArrayListTest extends ListTestCase
 
     public function test_only(): void
     {
-        $items = $this->collection()->only(['a', 'c'])->items();
+        $items = $this->collection()->keys(['a', 'c'])->items();
 
         $this->assertEquals(['a' => 1, 'c' => 3], $items);
     }
 
     public function test_find_by_value(): void
     {
-        $item = $this->collection()->find(static fn(int $value, string $key) => $value === 1);
+        $item = $this->collection()->contains(static fn(int $value, string $key) => $value === 1);
         $this->assertEquals(1, $item);
     }
 
     public function test_find_by_key(): void
     {
-        $item = $this->collection()->find(static fn(int $value, string $key) => $key === 'c');
+        $item = $this->collection()->contains(static fn(int $value, string $key) => $key === 'c');
         $this->assertEquals(3, $item);
     }
 
@@ -113,6 +114,21 @@ final class ArrayListTest extends ListTestCase
         $newCollection = $this->collection()->merge(new ArrayList([4, 5, 6, 7]));
 
         $this->assertEquals([1, 2, 3, 4, 5, 6, 7], $newCollection->values());
+    }
+
+    public function test_overlay_two_collection_into_a_new_one(): void
+    {
+        $newCollection = $this->collection()->overlay(new ArrayList([4, 5, 'c' => 6, 7]));
+
+        $this->assertEquals([
+            'a' => 1,
+            'b' => 2,
+            'c' => 6,
+            0 => 4,
+            1 => 5,
+            2 => 7
+
+        ], $newCollection->items());
     }
 
     protected function collection(): ArrayList
