@@ -7,10 +7,14 @@ declare(strict_types=1);
 
 namespace Vaened\Support\Types;
 
+use Vaened\Support\Concerns\ValueStringify;
+
 use function Lambdish\Phunctional\any;
 
 abstract class TypedList extends AbstractList
 {
+    use ValueStringify;
+
     public function __construct(array $items)
     {
         $this->ensureType($items);
@@ -30,12 +34,28 @@ abstract class TypedList extends AbstractList
         ]);
     }
 
-    private function ensureType(array $items): void
+    protected function ensureType(array $items): void
     {
         $type = $this->type();
+
         any(
-            fn(mixed $item) => $item instanceof $type ?: throw new InvalidType(static::class, $type, $item::class),
+            in_array($type, $this->natives())
+                ? self::ensureThat(static fn(mixed $item) => gettype($item) === $type)
+                : self::ensureThat(static fn(mixed $item) => $item instanceof $type)
+            ,
             $items
         );
+    }
+
+    protected function natives(): array
+    {
+        return ['boolean', 'integer', 'double', 'string', 'array', 'object', 'resource'];
+    }
+
+    protected function ensureThat(callable $callback): callable
+    {
+        $type = $this->type();
+        return fn(mixed $item) => $callback($item) ?:
+            throw new InvalidType(static::class, $type, $this->valueToString($item));
     }
 }
