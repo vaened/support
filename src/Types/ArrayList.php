@@ -8,8 +8,6 @@ declare(strict_types=1);
 namespace Vaened\Support\Types;
 
 use function array_unshift;
-use function Lambdish\Phunctional\flat_map;
-use function Lambdish\Phunctional\map;
 
 class ArrayList extends ImmutableCollection
 {
@@ -21,14 +19,14 @@ class ArrayList extends ImmutableCollection
         ]);
     }
 
-    public function flatMap(callable $callback): static
+    public function flatMap(callable $callback): self
     {
-        return new static(flat_map($callback, $this->items()));
+        return new static(parent::flatMap($callback));
     }
 
-    public function map(callable $callback): static
+    public function map(callable $callback): self
     {
-        return new static(map($callback, $this->items()));
+        return new static(parent::map($callback));
     }
 
     public function prepend(mixed $item, string|int $key = null): static

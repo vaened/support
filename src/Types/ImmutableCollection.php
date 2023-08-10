@@ -17,20 +17,41 @@ use function array_intersect_key;
 use function array_reverse;
 use function array_values;
 use function count;
+use function iterator_to_array;
 use function Lambdish\Phunctional\each;
 use function Lambdish\Phunctional\filter;
+use function Lambdish\Phunctional\flatten;
+use function Lambdish\Phunctional\map;
 use function Lambdish\Phunctional\reduce;
 use function Lambdish\Phunctional\some;
 
 class ImmutableCollection implements Countable, IteratorAggregate
 {
-    public function __construct(protected array $items)
+    protected array $items;
+
+    public function __construct(iterable $items)
     {
+        $this->items = match (true) {
+            $items instanceof self => $items->items(),
+            $items instanceof Traversable => iterator_to_array($items),
+            $items instanceof ArrayIterator => $items->getArrayCopy(),
+            default => $items,
+        };
     }
 
     public function reverse(): static
     {
         return new static(array_reverse($this->items, true));
+    }
+
+    public function flatMap(callable $callback): iterable
+    {
+        return flatten($this->map($callback));
+    }
+
+    public function map(callable $callback): iterable
+    {
+        return map($callback, $this->items());
     }
 
     public function only(array $keys): static

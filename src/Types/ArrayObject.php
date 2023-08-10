@@ -8,8 +8,6 @@ declare(strict_types=1);
 namespace Vaened\Support\Types;
 
 use function Lambdish\Phunctional\any;
-use function Lambdish\Phunctional\flatten;
-use function Lambdish\Phunctional\map;
 
 abstract class ArrayObject extends ImmutableCollection
 {
@@ -30,16 +28,6 @@ abstract class ArrayObject extends ImmutableCollection
             ...$this->values(),
             ...$items,
         ]);
-    }
-
-    public function flatMap(callable $callback): array
-    {
-        return flatten($this->map($callback));
-    }
-
-    public function map(callable $callback): array
-    {
-        return map($callback, $this->items());
     }
 
     private function ensureType(array $items): void
