@@ -15,7 +15,7 @@ abstract class TypedList extends AbstractList
 {
     use ValueStringify;
 
-    public function __construct(array $items)
+    public function __construct(iterable $items)
     {
         $this->ensureType($items);
         parent::__construct($items);
@@ -35,7 +35,7 @@ abstract class TypedList extends AbstractList
         return parent::overlay($list);
     }
 
-    protected function ensureType(array $items): void
+    protected function ensureType(iterable $items): void
     {
         $type = $this->type();
 
