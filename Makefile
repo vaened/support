@@ -1,6 +1,6 @@
 current-dir := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-IMAGE=php-utils
+IMAGE=$(notdir $(patsubst %/,%,$(current-dir)))
 
 .PHONY: build
 build: deps
