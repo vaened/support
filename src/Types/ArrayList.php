@@ -11,16 +11,6 @@ use function array_unshift;
 
 class ArrayList extends AbstractList
 {
-    public function flatMap(callable $callback): self
-    {
-        return new static(parent::flatMap($callback));
-    }
-
-    public function map(callable $callback): self
-    {
-        return new static(parent::map($callback));
-    }
-
     public function prepend(mixed $item, string|int $key = null): static
     {
         if (null === $key) {

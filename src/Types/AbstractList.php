@@ -51,14 +51,14 @@ abstract class AbstractList implements Countable, IteratorAggregate
         return new static(array_reverse($this->items, true));
     }
 
-    public function flatMap(callable $operation): iterable
+    public function flatMap(callable $operation): self|static
     {
-        return flatten($this->map($operation));
+        return new static (flatten($this->map($operation)));
     }
 
-    public function map(callable $predicate): iterable
+    public function map(callable $predicate): self|static
     {
-        return map($predicate, $this->items());
+        return new static(map($predicate, $this->items()));
     }
 
     public function pick(callable $predicate): mixed

@@ -10,6 +10,8 @@ namespace Vaened\Support\Types;
 use Vaened\Support\Concerns\ValueStringify;
 
 use function Lambdish\Phunctional\any;
+use function Lambdish\Phunctional\flatten;
+use function Lambdish\Phunctional\map;
 
 abstract class SecureList extends AbstractList
 {
@@ -33,6 +35,16 @@ abstract class SecureList extends AbstractList
     {
         static::ensureType($list->items());
         return parent::overlay($list);
+    }
+
+    public function flatMap(callable $operation): ArrayList
+    {
+        return new ArrayList(flatten($this->map($operation)));
+    }
+
+    public function map(callable $predicate): ArrayList
+    {
+        return new ArrayList(map($predicate, $this->items()));
     }
 
     protected static function ensureType(iterable $items): void
