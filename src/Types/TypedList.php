@@ -17,45 +17,45 @@ abstract class TypedList extends AbstractList
 
     public function __construct(iterable $items)
     {
-        $this->ensureType($items);
+        static::ensureType($items);
         parent::__construct($items);
     }
 
-    abstract protected function type(): string;
+    abstract static protected function type(): string;
 
     public function merge(AbstractList $list): static
     {
-        $this->ensureType($list->items());
+        static::ensureType($list->items());
         return parent::merge($list);
     }
 
     public function overlay(AbstractList $list): static
     {
-        $this->ensureType($list->items());
+        static::ensureType($list->items());
         return parent::overlay($list);
     }
 
-    protected function ensureType(iterable $items): void
+    protected static function ensureType(iterable $items): void
     {
-        $type = $this->type();
+        $type = static::type();
 
         any(
-            in_array($type, $this->natives())
+            in_array($type, static::natives())
                 ? self::ensureThat(static fn(mixed $item) => gettype($item) === $type)
                 : self::ensureThat(static fn(mixed $item) => $item instanceof $type),
             $items
         );
     }
 
-    protected function natives(): array
+    protected static function natives(): array
     {
         return ['boolean', 'integer', 'double', 'string', 'array', 'object', 'resource'];
     }
 
-    protected function ensureThat(callable $callback): callable
+    protected static function ensureThat(callable $callback): callable
     {
-        $type = $this->type();
+        $type = static::type();
         return fn(mixed $item) => $callback($item) ?:
-            throw new InvalidType(static::class, $type, $this->valueToString($item));
+            throw new InvalidType(static::class, $type, static::valueToString($item));
     }
 }

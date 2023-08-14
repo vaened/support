@@ -10,7 +10,6 @@ namespace Vaened\Support\Concerns;
 use DateTimeInterface;
 use Stringable;
 
-use function dd;
 use function get_resource_type;
 use function is_array;
 use function is_bool;
@@ -19,7 +18,7 @@ use function is_scalar;
 
 trait ValueStringify
 {
-    protected function valueToString(mixed $value): string
+    protected static function valueToString(mixed $value): string
     {
         if ($value === null) {
             return 'NULL';

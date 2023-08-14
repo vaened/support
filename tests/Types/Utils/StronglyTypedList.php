@@ -23,7 +23,7 @@ final class StronglyTypedList extends TypedList
         self::$type = $type;
     }
 
-    protected function type(): string
+    protected static function type(): string
     {
         return self::$type;
     }

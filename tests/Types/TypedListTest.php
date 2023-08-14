@@ -157,7 +157,7 @@ final class TypedListTest extends ListTestCase
                 parent::__construct([new stdClass()]);
             }
 
-            protected function type(): string
+            protected static function type(): string
             {
                 return stdClass::class;
             }
@@ -185,7 +185,7 @@ final class TypedListTest extends ListTestCase
                 parent::__construct([new stdClass()]);
             }
 
-            protected function type(): string
+            protected static function type(): string
             {
                 return stdClass::class;
             }
