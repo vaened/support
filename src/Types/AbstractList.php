@@ -53,12 +53,12 @@ abstract class AbstractList implements Countable, IteratorAggregate
 
     public function flatMap(callable $mapper): self|static
     {
-        return new static(flat_map($mapper, $this->items()));
+        return new static(array_values(flat_map($mapper, $this->items())));
     }
 
     public function map(callable $mapper): self|static
     {
-        return new static(map($mapper, $this->items()));
+        return new static(array_values(map($mapper, $this->items())));
     }
 
     public function pick(callable $predicate): mixed
