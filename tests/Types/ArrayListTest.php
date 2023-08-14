@@ -7,32 +7,37 @@ declare(strict_types=1);
 
 namespace Vaened\Support\Tests\Types;
 
+use PHPUnit\Framework\Attributes\Test;
 use Vaened\Support\Types\ArrayList;
 
 use function is_numeric;
 
 final class ArrayListTest extends ListTestCase
 {
-    public function test_reverse(): void
+    #[Test]
+    public function reverse(): void
     {
         $items = $this->collection()->reverse()->items();
 
         $this->assertEquals(['c' => 3, 'b' => 2, 'a' => 1], $items);
     }
 
-    public function test_find_by_value(): void
+    #[Test]
+    public function find_by_value(): void
     {
         $item = $this->collection()->pick(static fn(int $value, string $key) => $value === 1);
         $this->assertEquals(1, $item);
     }
 
-    public function test_find_by_key(): void
+    #[Test]
+    public function find_by_key(): void
     {
         $item = $this->collection()->pick(static fn(int $value, string $key) => $key === 'c');
         $this->assertEquals(3, $item);
     }
 
-    public function test_each(): void
+    #[Test]
+    public function each(): void
     {
         $totalItems = [];
 
@@ -43,21 +48,24 @@ final class ArrayListTest extends ListTestCase
         $this->assertEquals(['a' => 1, 'b' => 2, 'c' => 3], $totalItems);
     }
 
-    public function test_filter_by_value(): void
+    #[Test]
+    public function filter_by_value(): void
     {
         $items = $this->collection()->filter(static fn(int $value, string $key) => $value % 2 === 0)->items();
 
         $this->assertEquals(['b' => 2], $items);
     }
 
-    public function test_filter_by_key(): void
+    #[Test]
+    public function filter_by_key(): void
     {
         $items = $this->collection()->filter(static fn(int $value, string $key) => !empty($key))->items();
 
         $this->assertEquals(['a' => 1, 'b' => 2, 'c' => 3], $items);
     }
 
-    public function test_reduce(): void
+    #[Test]
+    public function reduce(): void
     {
         $sum = $this->collection()->reduce(function (int &$acc, int $value) {
             $acc += $value;
@@ -67,48 +75,56 @@ final class ArrayListTest extends ListTestCase
         $this->assertEquals(6, $sum);
     }
 
-    public function test_some_by_value(): void
+    #[Test]
+    public function some_by_value(): void
     {
         $this->assertTrue($this->collection()->some(static fn(int $value) => $value === 1));
         $this->assertFalse($this->collection()->some(static fn(int $value) => $value === 4));
     }
 
-    public function test_some_by_key(): void
+    #[Test]
+    public function some_by_key(): void
     {
         $this->assertTrue($this->collection()->some(static fn(int $value, string $key) => $key === 'a'));
         $this->assertFalse($this->collection()->some(static fn(int $value, string $key) => $key === 'd'));
     }
 
-    public function test_every_by_value(): void
+    #[Test]
+    public function every_by_value(): void
     {
         $this->assertTrue($this->collection()->some(static fn(mixed $value) => is_numeric($value)));
         $this->assertFalse($this->collection()->some(static fn(mixed $value) => !is_numeric($value)));
     }
 
-    public function test_every_by_key(): void
+    #[Test]
+    public function every_by_key(): void
     {
         $this->assertTrue($this->collection()->some(static fn(int $value, string $key) => !empty($key)));
         $this->assertFalse($this->collection()->some(static fn(int $value, string $key) => empty($key)));
     }
 
-    public function test_key_of(): void
+    #[Test]
+    public function key_of(): void
     {
         $this->assertEquals('a', $this->collection()->keyOf(static fn(int $value) => $value === 1));
     }
 
-    public function test_values(): void
+    #[Test]
+    public function values(): void
     {
         $this->assertEquals([1, 2, 3], $this->collection()->values());
     }
 
-    public function test_merge_two_collection_into_a_new_one(): void
+    #[Test]
+    public function merge_two_collection_into_a_new_one(): void
     {
         $newCollection = $this->collection()->merge(new ArrayList([4, 5, 6, 7]));
 
         $this->assertEquals([1, 2, 3, 4, 5, 6, 7], $newCollection->values());
     }
 
-    public function test_overlay_two_collection_into_a_new_one(): void
+    #[Test]
+    public function overlay_two_collection_into_a_new_one(): void
     {
         $newCollection = $this->collection()->overlay(new ArrayList([4, 5, 'c' => 6, 7]));
 

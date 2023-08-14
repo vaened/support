@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Vaened\Support\Tests\Types;
 
+use PHPUnit\Framework\Attributes\Test;
 use stdClass;
 use Vaened\Support\Tests\Types\Utils\Person;
 use Vaened\Support\Tests\Types\Utils\StronglySecureList;
@@ -24,7 +25,8 @@ final class SecureListTest extends ListTestCase
 
     private readonly Person $jotaro;
 
-    public function test_adding_a_disallowed_type_throws_an_exception(): void
+    #[Test]
+    public function adding_a_disallowed_type_throws_an_exception(): void
     {
         $template = 'The collection <%s> requires type <%s>, but <%s> was given';
         $this->expectException(InvalidType::class);
@@ -34,7 +36,8 @@ final class SecureListTest extends ListTestCase
         new StronglySecureList([new stdClass()]);
     }
 
-    public function test_reverse_objects(): void
+    #[Test]
+    public function reverse_objects(): void
     {
         $items = $this->collection()->reverse()->items();
 
@@ -45,19 +48,22 @@ final class SecureListTest extends ListTestCase
         ], $items);
     }
 
-    public function test_find_object_by_value(): void
+    #[Test]
+    public function find_object_by_value(): void
     {
         $item = $this->collection()->pick(static fn(Person $person) => $person->name === 'Gyro');
         $this->assertEquals($this->gyro, $item);
     }
 
-    public function test_find_object_by_key(): void
+    #[Test]
+    public function find_object_by_key(): void
     {
         $item = $this->collection()->pick(static fn(Person $person, int $key) => $key === 0);
         $this->assertEquals($this->jotaro, $item);
     }
 
-    public function test_each_objects(): void
+    #[Test]
+    public function each_objects(): void
     {
         $items = [];
 
@@ -68,21 +74,24 @@ final class SecureListTest extends ListTestCase
         $this->assertEquals([0 => 'Jotaro', 1 => 'Gyro', 2 => 'Josuke'], $items);
     }
 
-    public function test_filter_object_by_value(): void
+    #[Test]
+    public function filter_object_by_value(): void
     {
         $items = $this->collection()->filter(static fn(Person $person, int $key) => $person->name === 'Josuke')->items();
 
         $this->assertEquals([2 => $this->josuke], $items);
     }
 
-    public function test_filter_object_by_key(): void
+    #[Test]
+    public function filter_object_by_key(): void
     {
         $items = $this->collection()->filter(static fn(Person $person, int $key) => $key === 1)->items();
 
         $this->assertEquals([1 => $this->gyro], $items);
     }
 
-    public function test_reduce_objects(): void
+    #[Test]
+    public function reduce_objects(): void
     {
         $sum = $this->collection()->reduce(function (array &$acc, Person $person, int $key) {
             $acc[] = sprintf('[%d][%s]', $key, $person->name);
@@ -96,37 +105,43 @@ final class SecureListTest extends ListTestCase
         ], $sum);
     }
 
-    public function test_some_object_by_value(): void
+    #[Test]
+    public function some_object_by_value(): void
     {
         $this->assertTrue($this->collection()->some(static fn(Person $person) => $person->name === 'Gyro'));
         $this->assertFalse($this->collection()->some(static fn(Person $person) => $person->name === 'Non'));
     }
 
-    public function test_some_object_by_key(): void
+    #[Test]
+    public function some_object_by_key(): void
     {
         $this->assertTrue($this->collection()->some(static fn(Person $person, int $key) => $key === 1));
         $this->assertFalse($this->collection()->some(static fn(Person $person, int $key) => $key === 4));
     }
 
-    public function test_every_object_by_value(): void
+    #[Test]
+    public function every_object_by_value(): void
     {
         $this->assertTrue($this->collection()->some(static fn(Person $person) => !empty($person->name)));
         $this->assertFalse($this->collection()->some(static fn(Person $person) => empty($person->name)));
     }
 
-    public function test_every_object_by_key(): void
+    #[Test]
+    public function every_object_by_key(): void
     {
         $this->assertTrue($this->collection()->some(static fn(Person $person, mixed $key) => is_numeric($key)));
         $this->assertFalse($this->collection()->some(static fn(Person $person, mixed $key) => !is_numeric($key)));
     }
 
-    public function test_key_object_of(): void
+    #[Test]
+    public function key_object_of(): void
     {
         $this->assertEquals(1, $this->collection()->keyOf(static fn(Person $person) => $person->name === 'Gyro'));
         $this->assertEquals(0, $this->collection()->keyOf(static fn(Person $person) => $person->name === 'Jotaro'));
     }
 
-    public function test_object_values(): void
+    #[Test]
+    public function object_values(): void
     {
         $this->assertEquals([
             $this->jotaro,
@@ -135,7 +150,8 @@ final class SecureListTest extends ListTestCase
         ], $this->collection()->values());
     }
 
-    public function test_merge_two_objects_collection_into_a_new_one(): void
+    #[Test]
+    public function merge_two_objects_collection_into_a_new_one(): void
     {
         $dio           = new Person('Dio');
         $newCollection = $this->collection()->merge(new StronglySecureList([$dio]));
@@ -148,7 +164,8 @@ final class SecureListTest extends ListTestCase
         ], $newCollection->values());
     }
 
-    public function test_merging_collection_of_objects_of_different_types_throws_an_exception(): void
+    #[Test]
+    public function merging_collection_of_objects_of_different_types_throws_an_exception(): void
     {
         $this->expectException(InvalidType::class);
         $this->collection()->merge(new class extends SecureList {
@@ -164,7 +181,8 @@ final class SecureListTest extends ListTestCase
         });
     }
 
-    public function test_overlay_two_objects_collection_into_a_new_one(): void
+    #[Test]
+    public function overlay_two_objects_collection_into_a_new_one(): void
     {
         $dio           = new Person('Dio');
         $newCollection = $this->collection()->overlay(new StronglySecureList([2 => $dio]));
@@ -176,7 +194,8 @@ final class SecureListTest extends ListTestCase
         ], $newCollection->values());
     }
 
-    public function test_overlay_collection_of_objects_of_different_types_throws_an_exception(): void
+    #[Test]
+    public function overlay_collection_of_objects_of_different_types_throws_an_exception(): void
     {
         $this->expectException(InvalidType::class);
         $this->collection()->overlay(new class extends SecureList {
