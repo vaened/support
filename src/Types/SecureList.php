@@ -37,14 +37,14 @@ abstract class SecureList extends AbstractList
         return parent::overlay($list);
     }
 
-    public function flatMap(callable $operation): ArrayList
+    public function flatMap(callable $mapper): ArrayList
     {
-        return new ArrayList(flatten($this->map($operation)));
+        return new ArrayList(flatten($this->map($mapper)));
     }
 
-    public function map(callable $predicate): ArrayList
+    public function map(callable $mapper): ArrayList
     {
-        return new ArrayList(map($predicate, $this->items()));
+        return new ArrayList(map($mapper, $this->items()));
     }
 
     protected static function ensureType(iterable $items): void

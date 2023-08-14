@@ -51,14 +51,14 @@ abstract class AbstractList implements Countable, IteratorAggregate
         return new static(array_reverse($this->items, true));
     }
 
-    public function flatMap(callable $operation): self|static
+    public function flatMap(callable $mapper): self|static
     {
-        return new static (flatten($this->map($operation)));
+        return new static (flatten($this->map($mapper)));
     }
 
-    public function map(callable $predicate): self|static
+    public function map(callable $mapper): self|static
     {
-        return new static(map($predicate, $this->items()));
+        return new static(map($mapper, $this->items()));
     }
 
     public function pick(callable $predicate): mixed
@@ -72,9 +72,9 @@ abstract class AbstractList implements Countable, IteratorAggregate
         return null;
     }
 
-    public function each(callable $operation): static
+    public function each(callable $action): static
     {
-        each($operation, $this->items());
+        each($action, $this->items());
         return $this;
     }
 
@@ -83,9 +83,9 @@ abstract class AbstractList implements Countable, IteratorAggregate
         return new static(filter($predicate, $this->items()));
     }
 
-    public function reduce(callable $operation, mixed $initial = null): mixed
+    public function reduce(callable $accumulator, mixed $initial = null): mixed
     {
-        return reduce($operation, $this->items(), $initial);
+        return reduce($accumulator, $this->items(), $initial);
     }
 
     public function some(callable $predicate): bool
@@ -93,10 +93,10 @@ abstract class AbstractList implements Countable, IteratorAggregate
         return some($predicate, $this->items());
     }
 
-    public function keyOf(callable $criteria): int|string|null
+    public function keyOf(callable $predicate): int|string|null
     {
         foreach ($this->items() as $key => $item) {
-            if ($criteria($item, $key)) {
+            if ($predicate($item, $key)) {
                 return $key;
             }
         }
