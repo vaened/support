@@ -16,7 +16,7 @@ use function array_reverse;
 use function array_values;
 use function count;
 use function iterator_to_array;
-use function Lambdish\Phunctional\{each, filter, flatten, map, reduce, some};
+use function Lambdish\Phunctional\{each, filter, flat_map, map, reduce, some};
 
 abstract class AbstractList implements Countable, IteratorAggregate
 {
@@ -53,7 +53,7 @@ abstract class AbstractList implements Countable, IteratorAggregate
 
     public function flatMap(callable $mapper): self|static
     {
-        return new static (flatten($this->map($mapper)));
+        return new static(flat_map($mapper, $this->items()));
     }
 
     public function map(callable $mapper): self|static

@@ -9,9 +9,7 @@ namespace Vaened\Support\Types;
 
 use Vaened\Support\Concerns\ValueStringify;
 
-use function Lambdish\Phunctional\any;
-use function Lambdish\Phunctional\flatten;
-use function Lambdish\Phunctional\map;
+use function Lambdish\Phunctional\{any, flat_map, map};
 
 abstract class SecureList extends AbstractList
 {
@@ -39,7 +37,7 @@ abstract class SecureList extends AbstractList
 
     public function flatMap(callable $mapper): ArrayList
     {
-        return new ArrayList(flatten($this->map($mapper)));
+        return new ArrayList(flat_map($mapper, $this->items()));
     }
 
     public function map(callable $mapper): ArrayList
