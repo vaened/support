@@ -11,6 +11,8 @@ use PHPUnit\Framework\Attributes\Test;
 use Vaened\Support\Types\ArrayList;
 
 use function is_numeric;
+use function Lambdish\Phunctional\map;
+use function sprintf;
 
 final class ArrayListTest extends ListTestCase
 {
@@ -137,6 +139,30 @@ final class ArrayListTest extends ListTestCase
             2   => 7
 
         ], $newCollection->items());
+    }
+
+    #[Test]
+    public function map_to_names(): void
+    {
+        $names = $this->collection()->map(
+            static fn(int $value, string $key) => sprintf('%s:%d', $key, $value)
+        );
+
+        $this->assertInstanceOf(ArrayList::class, $names);
+        $this->assertEquals([0 => 'a:1', 1 => 'b:2', 2 => 'c:3'], $names->items());
+    }
+
+    #[Test]
+    public function flat_map_multiplied_by_two(): void
+    {
+        $numbers = (new ArrayList([[1, 2], [3, 4], [5, 6]]))->flatMap(
+            static fn(array $numbers) => map(
+                static fn(int $number) => $number * 2,
+                $numbers
+            ),
+        );
+
+        $this->assertEquals([2, 4, 6, 8, 10, 12], $numbers->items());
     }
 
     protected function collection(): ArrayList

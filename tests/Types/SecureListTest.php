@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\Test;
 use stdClass;
 use Vaened\Support\Tests\Types\Utils\Person;
 use Vaened\Support\Tests\Types\Utils\StronglySecureList;
+use Vaened\Support\Types\ArrayList;
 use Vaened\Support\Types\InvalidType;
 use Vaened\Support\Types\SecureList;
 
@@ -209,6 +210,28 @@ final class SecureListTest extends ListTestCase
                 return stdClass::class;
             }
         });
+    }
+
+    #[Test]
+    public function map_to_names(): void
+    {
+        $names = $this->collection()->map(
+            static fn(Person $person, int $key) => sprintf('%d:%s', $key, $person->name)
+        );
+
+        $this->assertInstanceOf(ArrayList::class, $names);
+        $this->assertEquals(['0:Jotaro', '1:Gyro', '2:Josuke'], $names->items());
+    }
+
+    #[Test]
+    public function flat_map_to_names(): void
+    {
+        $names = $this->collection()->flatMap(
+            static fn(Person $person, int $key) => [$key, $person->name]
+        );
+
+        $this->assertInstanceOf(ArrayList::class, $names);
+        $this->assertEquals([0, 'Jotaro', 1, 'Gyro', 2, 'Josuke'], $names->items());
     }
 
     protected function setUp(): void
