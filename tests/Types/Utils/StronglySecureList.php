@@ -7,9 +7,9 @@ declare(strict_types=1);
 
 namespace Vaened\Support\Tests\Types\Utils;
 
-use Vaened\Support\Types\TypedList;
+use Vaened\Support\Types\SecureList;
 
-final class StronglyTypedList extends TypedList
+final class StronglySecureList extends SecureList
 {
     private static string $type;
 

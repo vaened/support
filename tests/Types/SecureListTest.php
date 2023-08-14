@@ -9,14 +9,14 @@ namespace Vaened\Support\Tests\Types;
 
 use stdClass;
 use Vaened\Support\Tests\Types\Utils\Person;
-use Vaened\Support\Tests\Types\Utils\StronglyTypedList;
+use Vaened\Support\Tests\Types\Utils\StronglySecureList;
 use Vaened\Support\Types\InvalidType;
-use Vaened\Support\Types\TypedList;
+use Vaened\Support\Types\SecureList;
 
 use function is_numeric;
 use function sprintf;
 
-final class TypedListTest extends ListTestCase
+final class SecureListTest extends ListTestCase
 {
     private readonly Person $josuke;
 
@@ -29,9 +29,9 @@ final class TypedListTest extends ListTestCase
         $template = 'The collection <%s> requires type <%s>, but <%s> was given';
         $this->expectException(InvalidType::class);
         $this->expectExceptionMessage(
-            sprintf($template, StronglyTypedList::class, Person::class, stdClass::class)
+            sprintf($template, StronglySecureList::class, Person::class, stdClass::class)
         );
-        new StronglyTypedList([new stdClass()]);
+        new StronglySecureList([new stdClass()]);
     }
 
     public function test_reverse_objects(): void
@@ -138,7 +138,7 @@ final class TypedListTest extends ListTestCase
     public function test_merge_two_objects_collection_into_a_new_one(): void
     {
         $dio           = new Person('Dio');
-        $newCollection = $this->collection()->merge(new StronglyTypedList([$dio]));
+        $newCollection = $this->collection()->merge(new StronglySecureList([$dio]));
 
         $this->assertEquals([
             $this->jotaro,
@@ -151,7 +151,7 @@ final class TypedListTest extends ListTestCase
     public function test_merging_collection_of_objects_of_different_types_throws_an_exception(): void
     {
         $this->expectException(InvalidType::class);
-        $this->collection()->merge(new class extends TypedList {
+        $this->collection()->merge(new class extends SecureList {
             public function __construct()
             {
                 parent::__construct([new stdClass()]);
@@ -167,7 +167,7 @@ final class TypedListTest extends ListTestCase
     public function test_overlay_two_objects_collection_into_a_new_one(): void
     {
         $dio           = new Person('Dio');
-        $newCollection = $this->collection()->overlay(new StronglyTypedList([2 => $dio]));
+        $newCollection = $this->collection()->overlay(new StronglySecureList([2 => $dio]));
 
         $this->assertEquals([
             $this->jotaro,
@@ -179,7 +179,7 @@ final class TypedListTest extends ListTestCase
     public function test_overlay_collection_of_objects_of_different_types_throws_an_exception(): void
     {
         $this->expectException(InvalidType::class);
-        $this->collection()->overlay(new class extends TypedList {
+        $this->collection()->overlay(new class extends SecureList {
             public function __construct()
             {
                 parent::__construct([new stdClass()]);
@@ -195,15 +195,15 @@ final class TypedListTest extends ListTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        StronglyTypedList::setType(Person::class);
+        StronglySecureList::setType(Person::class);
         $this->jotaro = Person::create('Jotaro');
         $this->gyro   = Person::create('Gyro');
         $this->josuke = Person::create('Josuke');
     }
 
-    protected function collection(): StronglyTypedList
+    protected function collection(): StronglySecureList
     {
-        return new StronglyTypedList([
+        return new StronglySecureList([
                 $this->jotaro,
                 $this->gyro,
                 $this->josuke,

@@ -11,7 +11,7 @@ use Vaened\Support\Concerns\ValueStringify;
 
 use function Lambdish\Phunctional\any;
 
-abstract class TypedList extends AbstractList
+abstract class SecureList extends AbstractList
 {
     use ValueStringify;
 
