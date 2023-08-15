@@ -18,8 +18,7 @@ abstract class SecureList extends AbstractList
 
     public function __construct(iterable $items)
     {
-        static::ensureType($items);
-        parent::__construct($items);
+        parent::__construct(self::processSecureItems($items));
     }
 
     abstract static protected function type(): string;
@@ -46,6 +45,12 @@ abstract class SecureList extends AbstractList
         return new ArrayList(array_values(map($mapper, $this->items())));
     }
 
+    protected static function processSecureItems(iterable $items): iterable
+    {
+        static::ensureType($items);
+        return $items;
+    }
+
     protected static function ensureType(iterable $items): void
     {
         $type = static::type();
@@ -63,10 +68,10 @@ abstract class SecureList extends AbstractList
         return ['boolean', 'integer', 'double', 'string', 'array', 'object', 'resource'];
     }
 
-    protected static function ensureThat(callable $callback): callable
+    protected static function ensureThat(callable $predicate): callable
     {
         $type = static::type();
-        return fn(mixed $item) => $callback($item) ?:
+        return fn(mixed $item) => $predicate($item) ?:
             throw new InvalidType(static::class, $type, static::valueToString($item));
     }
 }
