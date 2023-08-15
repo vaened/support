@@ -20,11 +20,13 @@ use function Lambdish\Phunctional\{each, filter, flat_map, map, reduce, some};
 
 abstract class AbstractList implements Countable, IteratorAggregate
 {
+    public const Empty = [];
+
     protected array $items;
 
     public function __construct(iterable $items)
     {
-        $this->items = self::parse($items);
+        $this->items = $this->safelyProcessItems($items);
     }
 
     public function merge(self $list): static
@@ -51,14 +53,14 @@ abstract class AbstractList implements Countable, IteratorAggregate
         return new static(array_reverse($this->items, true));
     }
 
-    public function flatMap(callable $mapper): self|static
+    public function flatMap(callable $mapper): ArrayList
     {
-        return new static(array_values(flat_map($mapper, $this->items())));
+        return new ArrayList(array_values(flat_map($mapper, $this->items())));
     }
 
-    public function map(callable $mapper): self|static
+    public function map(callable $mapper): ArrayList
     {
-        return new static(array_values(map($mapper, $this->items())));
+        return new ArrayList(array_values(map($mapper, $this->items())));
     }
 
     public function pick(callable $predicate): mixed
@@ -129,7 +131,12 @@ abstract class AbstractList implements Countable, IteratorAggregate
         return new ArrayIterator($this->items());
     }
 
-    private static function parse(iterable $items): array
+    protected function safelyProcessItems(iterable $items): array
+    {
+        return self::parse($items);
+    }
+
+    protected static function parse(iterable $items): array
     {
         return match (true) {
             $items instanceof self => $items->items(),

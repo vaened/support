@@ -18,7 +18,7 @@ use function is_scalar;
 
 trait ValueStringify
 {
-    protected static function valueToString(mixed $value): string
+    protected function valueToString(mixed $value): string
     {
         if ($value === null) {
             return 'NULL';
