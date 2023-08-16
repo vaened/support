@@ -107,10 +107,28 @@ abstract class AbstractList implements Countable, IteratorAggregate
         return null;
     }
 
+    public function unique(callable $mapper = null): static
+    {
+        if (null === $mapper) {
+            return new static(array_unique($this->items(), SORT_REGULAR));
+        }
+
+        $exists = [];
+
+        return $this->filter(static function (mixed $item, int|string $key) use ($mapper, &$exists): bool {
+            if (in_array($value = $mapper($item, $key), $exists, true)) {
+                return false;
+            }
+
+            $exists[] = $value;
+            return true;
+        });
+    }
+
     public function duplicates(callable $mapper = null): ArrayList
     {
         $items   = $this->map($mapper ?? static fn(mixed $item) => $item);
-        $uniques = array_unique($items->items(), SORT_REGULAR);
+        $uniques = $items->unique()->items();
 
         return $items->filter(
             static fn(mixed $element, int|string $key) => !isset($uniques[$key]) || $uniques[$key] != $element

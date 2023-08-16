@@ -171,6 +171,13 @@ final class ArrayListTest extends ListTestCase
         $this->assertEquals([4 => 5, 5 => 2], (new ArrayList([1, 2, 4, 5, 5, 2]))->duplicates()->items());
     }
 
+    #[Test]
+    public function filter_uniques(): void
+    {
+        $numbers = new ArrayList([1, 2, 4, 5, 5, 2]);
+        $this->assertEquals([1, 2, 4, 5], $numbers->unique()->items());
+    }
+
     protected function collection(): ArrayList
     {
         return new ArrayList([
