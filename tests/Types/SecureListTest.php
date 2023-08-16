@@ -234,6 +234,21 @@ final class SecureListTest extends ListTestCase
         $this->assertEquals([0, 'Jotaro', 1, 'Gyro', 2, 'Josuke'], $names->items());
     }
 
+    #[Test]
+    public function filter_duplicates(): void
+    {
+        $collection = new StronglySecureList([
+                $this->jotaro,
+                $this->gyro,
+                $this->gyro,
+                $this->josuke,
+            ]
+        );
+
+        $this->assertEquals([2 => $this->gyro], $collection->duplicates()->items());
+        $this->assertEquals([2 => 'Gyro'], $collection->duplicates(static fn(Person $person) => $person->name)->items());
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

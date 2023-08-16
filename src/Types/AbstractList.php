@@ -13,6 +13,7 @@ use IteratorAggregate;
 use Traversable;
 
 use function array_reverse;
+use function array_unique;
 use function array_values;
 use function count;
 use function iterator_to_array;
@@ -104,6 +105,16 @@ abstract class AbstractList implements Countable, IteratorAggregate
         }
 
         return null;
+    }
+
+    public function duplicates(callable $mapper = null): ArrayList
+    {
+        $items   = $this->map($mapper ?? static fn(mixed $item) => $item);
+        $uniques = array_unique($items->items(), SORT_REGULAR);
+
+        return $items->filter(
+            static fn(mixed $element, int|string $key) => !isset($uniques[$key]) || $uniques[$key] != $element
+        );
     }
 
     public function items(): array
