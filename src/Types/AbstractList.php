@@ -127,7 +127,7 @@ abstract class AbstractList implements Countable, IteratorAggregate
 
     public function duplicates(callable $mapper = null): ArrayList
     {
-        $items   = $this->map($mapper ?? static fn(mixed $item) => $item);
+        $items   = null === $mapper ? new ArrayList($this) : $this->map($mapper);
         $uniques = $items->unique()->items();
 
         return $items->filter(
