@@ -51,7 +51,7 @@ abstract class SecureList extends AbstractList
     {
         $type = static::type();
         return fn(mixed $item) => $predicate($item) ?:
-            throw new InvalidType(static::class, $type, $this->valueToString($item));
+            throw new InvalidSafelistItem(static::class, $type, $this->valueToString($item));
     }
 
     protected static function natives(): array

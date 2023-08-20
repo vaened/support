@@ -12,7 +12,7 @@ use stdClass;
 use Vaened\Support\Tests\Types\Utils\Person;
 use Vaened\Support\Tests\Types\Utils\StronglySecureList;
 use Vaened\Support\Types\ArrayList;
-use Vaened\Support\Types\InvalidType;
+use Vaened\Support\Types\InvalidSafelistItem;
 use Vaened\Support\Types\SecureList;
 
 use function is_numeric;
@@ -30,7 +30,7 @@ final class SecureListTest extends ListTestCase
     public function adding_a_disallowed_type_throws_an_exception(): void
     {
         $template = 'The collection <%s> requires type <%s>, but <%s> was given';
-        $this->expectException(InvalidType::class);
+        $this->expectException(InvalidSafelistItem::class);
         $this->expectExceptionMessage(
             sprintf($template, StronglySecureList::class, Person::class, stdClass::class)
         );
@@ -168,7 +168,7 @@ final class SecureListTest extends ListTestCase
     #[Test]
     public function merging_collection_of_objects_of_different_types_throws_an_exception(): void
     {
-        $this->expectException(InvalidType::class);
+        $this->expectException(InvalidSafelistItem::class);
         $this->collection()->merge(new class extends SecureList {
             public function __construct()
             {
@@ -198,7 +198,7 @@ final class SecureListTest extends ListTestCase
     #[Test]
     public function overlay_collection_of_objects_of_different_types_throws_an_exception(): void
     {
-        $this->expectException(InvalidType::class);
+        $this->expectException(InvalidSafelistItem::class);
         $this->collection()->overlay(new class extends SecureList {
             public function __construct()
             {

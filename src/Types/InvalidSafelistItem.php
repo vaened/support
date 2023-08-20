@@ -11,7 +11,7 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-final class InvalidType extends InvalidArgumentException
+final class InvalidSafelistItem extends InvalidArgumentException
 {
     public function __construct(string $collection, string $expected, string $given)
     {

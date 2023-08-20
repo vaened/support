@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\Test;
 use stdClass;
 use Vaened\Support\Tests\TestCase;
 use Vaened\Support\Tests\Types\Utils\StronglySecureList;
-use Vaened\Support\Types\InvalidType;
+use Vaened\Support\Types\InvalidSafelistItem;
 
 use function sprintf;
 
@@ -104,7 +104,7 @@ final class ListTypesTest extends TestCase
     {
         StronglySecureList::setType($expected);
         $template = 'The collection <%s> requires type <%s>, but <%s> was given';
-        $this->expectException(InvalidType::class);
+        $this->expectException(InvalidSafelistItem::class);
         $this->expectExceptionMessage(
             sprintf($template, StronglySecureList::class, $expected, $actual)
         );
