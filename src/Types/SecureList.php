@@ -21,7 +21,7 @@ abstract class SecureList extends AbstractList
         parent::__construct($items);
     }
 
-    abstract static protected function type(): string;
+    abstract static public function type(): string;
 
     public function merge(AbstractList $list): static
     {

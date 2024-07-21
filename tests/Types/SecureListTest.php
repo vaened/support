@@ -175,7 +175,7 @@ final class SecureListTest extends ListTestCase
                 parent::__construct([new stdClass()]);
             }
 
-            protected static function type(): string
+            public static function type(): string
             {
                 return stdClass::class;
             }
@@ -205,7 +205,7 @@ final class SecureListTest extends ListTestCase
                 parent::__construct([new stdClass()]);
             }
 
-            protected static function type(): string
+            public static function type(): string
             {
                 return stdClass::class;
             }

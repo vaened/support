@@ -23,7 +23,7 @@ final class StronglySecureList extends SecureList
         self::$type = $type;
     }
 
-    protected static function type(): string
+    public static function type(): string
     {
         return self::$type;
     }
