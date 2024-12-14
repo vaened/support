@@ -11,6 +11,11 @@ use function array_unshift;
 
 class ArrayList extends AbstractList
 {
+    public static function from(iterable $items): static
+    {
+        return new self($items);
+    }
+
     public function prepend(mixed $item, string|int $key = null): static
     {
         if (null === $key) {
