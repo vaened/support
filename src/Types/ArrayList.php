@@ -13,7 +13,7 @@ class ArrayList extends AbstractList
 {
     public static function from(iterable $items): static
     {
-        return new self($items);
+        return new static($items);
     }
 
     public function prepend(mixed $item, string|int $key = null): static
