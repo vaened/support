@@ -107,7 +107,7 @@ abstract class AbstractList implements Countable, IteratorAggregate
         return null;
     }
 
-    public function unique(callable $mapper = null): static
+    public function unique(?callable $mapper = null): static
     {
         if (null === $mapper) {
             return new static(array_unique($this->items(), SORT_REGULAR));
@@ -125,7 +125,7 @@ abstract class AbstractList implements Countable, IteratorAggregate
         });
     }
 
-    public function duplicates(callable $mapper = null): ArrayList
+    public function duplicates(?callable $mapper = null): ArrayList
     {
         $items   = null === $mapper ? new ArrayList($this) : $this->map($mapper);
         $uniques = $items->unique()->items();
